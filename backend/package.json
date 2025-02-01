@@ -1,0 +1,52 @@
+{
+  "name": "tsc-base",
+  "version": "0.1.0",
+  "description": "A Typescript base project with `tsup` bundler and `tslog` logger",
+  "keywords": [
+    "typescript",
+    "bundler"
+  ],
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "tsup": {
+    "cjsInterop": true,
+    "dts": true,
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm"
+    ],
+    "splitting": false,
+    "sourcemap": true,
+    "clean": true
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "start": "node --env-file=.env --enable-source-maps --experimental-specifier-resolution=node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "radashi": "^12.3.0",
+    "tslog": "^4.9.3"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.5",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-perfectionist": "^4.3.0",
+    "prettier-plugin-organize-attributes": "^1.0.0",
+    "tslib": "^2.8.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.1"
+  },
+  "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c",
+  "engines": {
+    "node": ">=20.6.0"
+  }
+}
