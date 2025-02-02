@@ -16,33 +16,26 @@ setGlobalDispatcher(agent);
 async function main() {
   const queue = new PQueue({ concurrency: 4 });
 
+  const domains = await pb.collection('domains').getFullList({ filter: 'branch="executive"', sort: 'url' });
+
   const browser = await puppeteer.launch({
     args: ['--disable-web-security', '--allow-running-insecure-content'],
     headless: true,
   });
 
-  log.info('logging into pocketbase');
-  const domains = await pb
-    .collection('domains')
-    .getFullList({ filter: 'branch="executive" && redirection="" && otherRedirect="" && dead=0', sort: 'url' });
-
-  log.info('processing domains');
   for (const domain of domains.filter(
-    domain => !domain.dead && !domain.redirect && !domain.otherRedirect && domain.branch === 'executive'
+    domain => !domain.baseImg && !domain.dead && !domain.redirection && !domain.otherRedirect
   )) {
     log.info('processing domain', domain.url);
     await queue.add(async () => {
-      // check up status, grab snapshot
-      let failed = false;
-      let snapshot;
-      let screenshot;
       try {
-        snapshot = await (await fetch(domain.url, { signal: AbortSignal.timeout(3000) })).text();
-        if (snapshot) {
-          const page = await browser.newPage();
-          await page.goto(domain.url, { waitUntil: 'networkidle0' });
-          await page.setViewport({ height: 1420, width: 1280 });
-          screenshot = new File(
+        const page = await browser.newPage();
+
+        await page.goto(domain.url, { waitUntil: 'networkidle0' });
+        await page.setViewport({ height: 1420, width: 1280 });
+
+        const data = {
+          baseImg: new File(
             [
               new Blob([
                 await page.screenshot({
@@ -52,24 +45,18 @@ async function main() {
               ]),
             ],
             `${domain.url}_${new Date().toISOString().replace(' ', '_')}.png`
-          );
-          await page.close();
-        }
-      } catch {
-        failed = true;
-      }
-      try {
-        await pb.collection('checks').create({
-          domain: domain.id,
-          down: failed,
-          screenshot,
-          snapshot,
-        });
+          ),
+        };
+
+        await pb.collection('domains').update(domain.id, data);
+        await page.close();
       } catch (error) {
         log.error(error);
       }
     });
   }
+
+  process.exit(0);
 }
 
 main();
