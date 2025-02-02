@@ -32,7 +32,6 @@ async function main() {
   )) {
     log.info('processing domain', domain.url);
     await queue.add(async () => {
-      // check up status, grab snapshot
       let failed = false;
       let snapshot;
       let screenshot;

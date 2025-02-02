@@ -25,12 +25,21 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "start": "node --env-file=.env --enable-source-maps --experimental-specifier-resolution=node dist/index.js",
+    "start": "HTTP_REQUEST_TIMEOUT=5000 node --env-file=.env --enable-source-maps --experimental-specifier-resolution=node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "axios": "^1.7.9",
+    "cheerio": "^1.0.0",
+    "find-rss": "^1.6.4",
+    "p-queue": "^8.1.0",
+    "pixelmatch": "^6.0.0",
+    "pocketbase": "^0.25.1",
+    "puppeteer": "^24.1.1",
+    "puppeteer-full-page-screenshot": "^1.2.2",
     "radashi": "^12.3.4",
-    "tslog": "^4.9.3"
+    "tslog": "^4.9.3",
+    "undici": "^7.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
