@@ -1,0 +1,27 @@
+services:
+  archivebox:
+    image: 'archivebox/archivebox:0.8.5rc51'
+    env_file: 'box.env'
+    ports:
+      - '8000:8000'
+    volumes:
+      - './data:/data'
+      - '${S3_MOUNT}:/data/archive'
+    healthcheck:
+      test: 'curl --fail http://localhost:8000'
+  archivebox_scheduler:
+    image: 'archivebox/archivebox:0.8.5rc51'
+    env_file: 'box.env'
+    command: 'schedule --foreground --update --every=day'
+    volumes:
+      - './data:/data'
+  # sonic:
+  #   image: 'archivebox/sonic:latest'
+  #   env_file: 'sonic.env'
+  #   expose:
+  #     - 1491
+  #   healthcheck:
+  #     test: 'curl --fail http://localhost:1491'
+  #   volumes:
+  #     - './sonic.cfg:/etc/sonic.cfg:ro'
+  #     - './data/sonic:/var/lib/sonic/store'

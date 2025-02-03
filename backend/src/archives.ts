@@ -24,9 +24,9 @@ async function main() {
   log.info('processing domains');
   for (const domain of domains.filter(
     domain =>
-      isEmpty(domain.jan19Snapshot) ||
-      !domain.jan19Snapshot.startsWith('https://web.archive.org/web/2025') ||
-      !domain.jan19Snapshot.startsWith('https://web.archive.org/web/2024')
+      isEmpty(domain.archiveUrl) ||
+      !domain.archiveUrl.startsWith('https://web.archive.org/web/2025') ||
+      !domain.archiveUrl.startsWith('https://web.archive.org/web/2024')
   )) {
     log.info('processing domain', domain.url);
     await queue.add(async () => {

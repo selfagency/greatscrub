@@ -23,11 +23,9 @@ async function main() {
 
   const domains = await pb
     .collection('domains')
-    .getFullList({ filter: 'branch="executive" && redirection="" && otherRedirect="" && dead=0', sort: 'url' });
+    .getFullList({ filter: 'redirection="" && otherRedirect="" && dead=false', sort: 'url' });
 
-  for (const domain of domains.filter(
-    domain => !domain.dead && !domain.redirect && !domain.otherRedirect && domain.branch === 'executive'
-  )) {
+  domains.map(async domain => {
     log.info('processing domain', domain.url);
     await queue.add(async () => {
       try {
@@ -36,7 +34,7 @@ async function main() {
         log.error(error);
       }
     });
-  }
+  });
 }
 
 main();

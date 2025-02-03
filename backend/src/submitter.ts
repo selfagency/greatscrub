@@ -12,24 +12,36 @@ const agent = new Agent({
 setGlobalDispatcher(agent);
 
 async function main() {
-  const queue = new PQueue({ concurrency: 4 });
+  const queue = new PQueue({ concurrency: 8 });
 
-  log.info('logging into pocketbase');
-  const domains = await pb.collection('domains').getFullList({ filter: 'branch!="executive"', sort: 'url' });
+  log.info('getting domains');
+  const domains = await pb
+    .collection('domains')
+    .getFullList({ filter: 'dead=false && redirection="" && otherRedirect=""', sort: 'url' });
 
-  log.info('processing domains');
-  for (const domain of domains) {
-    log.info('processing domain', domain.url);
+  log.info('logging into archivebox');
+  const token = await (
+    await fetch('http://localhost:8000/api/v1/auth/get_api_token', {
+      body: JSON.stringify({
+        password: process.env.ARCHIVE_PASSWORD,
+        username: process.env.ARCHIVE_USERNAME,
+      }),
+      method: 'POST',
+    })
+  ).json();
+
+  domains.map(async domain => {
     await queue.add(async () => {
       try {
-        log.info('submitting to wayback machine');
-        await fetch('https://web.archive.org/save', {
+        log.info('submitting', domain.url);
+        await fetch('http://localhost:8000/api/v1/cli/add', {
           body: JSON.stringify({
-            url: domain.url,
+            extractors: 'singlefile',
+            tag: domain.branch,
+            urls: [domain.url],
           }),
           headers: {
-            Authorization: `LOW ${process.env.WAYBACK_ACCESS_KEY as string}:${process.env.WAYBACK_SECRET_KEY as string}`,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token.token}`,
           },
           method: 'POST',
         });
@@ -37,7 +49,7 @@ async function main() {
         log.error(error);
       }
     });
-  }
+  });
 }
 
 main();
