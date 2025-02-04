@@ -17,6 +17,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@trigger.dev/sdk": "^3.3.12",
     "axios": "^1.7.9",
     "cheerio": "^1.0.0",
     "disparity": "^3.2.0",
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.19.0",
+    "@trigger.dev/build": "^3.3.12",
     "@types/node": "^22.13.0",
     "@types/pixelmatch": "^5.2.6",
     "@types/pngjs": "^6.0.5",

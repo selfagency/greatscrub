@@ -252,3 +252,5 @@ $RECYCLE.BIN/
 
 dist/*
 pb_data/
+
+.trigger
