@@ -1,22 +1,19 @@
-import { defineConfig } from "@trigger.dev/sdk/v3";
+import { defineConfig } from '@trigger.dev/sdk/v3';
 
 export default defineConfig({
-  project: "proj_ipmpekmhjwmneotmrmiv",
-  runtime: "node",
-  logLevel: "log",
-  // The max compute seconds a task is allowed to run. If the task run exceeds this duration, it will be stopped.
-  // You can override this on an individual task.
-  // See https://trigger.dev/docs/runs/max-duration
+  dirs: ['./src/trigger'],
+  logLevel: 'log',
   maxDuration: 3600,
+  project: 'proj_ipmpekmhjwmneotmrmiv',
   retries: {
-    enabledInDev: true,
     default: {
-      maxAttempts: 3,
-      minTimeoutInMs: 1000,
-      maxTimeoutInMs: 10000,
       factor: 2,
+      maxAttempts: 3,
+      maxTimeoutInMs: 10000,
+      minTimeoutInMs: 1000,
       randomize: true,
     },
+    enabledInDev: true,
   },
-  dirs: ["./src/trigger"],
+  runtime: 'node',
 });

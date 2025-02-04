@@ -1,0 +1,3 @@
+backend: pnpm -C backend dev
+pocketb: pnpm -C backend dev:pb
+trigger: pnpm -C backend dev:trigger
