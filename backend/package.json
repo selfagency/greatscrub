@@ -13,7 +13,6 @@
     "build": "tsup",
     "build:types": "pnpx pocketbase-typegen --db ./pb_data/data.db --out ./src/pb.d.ts",
     "dev": "tsup --watch",
-    "dev:pb": "pocketbase serve",
     "dev:trigger": "pnpm dlx trigger.dev@latest dev",
     "start": "node --env-file=.env --enable-source-maps --experimental-specifier-resolution=node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
